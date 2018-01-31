@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "SubViewController.h"
+#import "TONavigationBar.h"
 
 @interface ViewController ()
 
@@ -51,6 +52,12 @@
 {
     SubViewController *viewController = [[SubViewController alloc] init];
     [self.navigationController pushViewController:viewController animated:YES];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [(TONavigationBar *)self.navigationController.navigationBar setBackgroundHidden:NO animated:animated transitionCoordinator:self.transitionCoordinator];
 }
 
 @end

@@ -19,6 +19,12 @@
     [super viewDidLoad];
     self.title = @"SubViewController";
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+    
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 180)];
+    headerView.backgroundColor = [UIColor blackColor];
+    self.tableView.tableHeaderView = headerView;
+    
+    self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -29,13 +35,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [(TONavigationBar *)self.navigationController.navigationBar setBackgroundHidden:YES animated:YES];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    [(TONavigationBar *)self.navigationController.navigationBar setBackgroundHidden:NO animated:YES];
+    [(TONavigationBar *)self.navigationController.navigationBar setBackgroundHidden:YES animated:animated transitionCoordinator:self.transitionCoordinator];
 }
 
 @end

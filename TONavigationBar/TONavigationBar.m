@@ -31,7 +31,7 @@
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        _backgroundView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
+        _backgroundView = [[UIVisualEffectView alloc] initWithEffect:nil];
         _separatorView = [[UIView alloc] initWithFrame:CGRectZero];
         _separatorHeight = 1.0f / [UIScreen mainScreen].scale;
     }
@@ -97,15 +97,26 @@
 #pragma mark - Transition Handling -
 - (void)setBackgroundHidden:(BOOL)hidden animated:(BOOL)animated
 {
+    [self setBackgroundHidden:hidden animated:animated transitionCoordinator:nil];
+}
+
+- (void)setBackgroundHidden:(BOOL)hidden animated:(BOOL)animated transitionCoordinator:(id<UIViewControllerTransitionCoordinator>)transitionCoordinator
+{
     void (^animationBlock)(void) = ^{
         self.backgroundView.alpha = hidden ? 0.0f : 1.0f;
         self.separatorView.alpha = hidden ? 0.0f : 1.0f;
+        self.tintColor = hidden ? [UIColor whiteColor] : nil;
     };
     
-    // If we are not a child of a navigation controller, just animate on our own
-    if (self.navigationController == nil) {
+    // If no transition coordinator was supplied, defer back to a pre-canned animation.
+    // For some annoying reason, the initial transition coordinator in iOS 11 fails to play the animation properly.
+    // As a result, if there is a coordinator, but the animation is NOT interactive, default back to the pre-canned animation
+    if (transitionCoordinator == nil || (transitionCoordinator && !transitionCoordinator.initiallyInteractive)) {
+        CGFloat duration = 0.35f;
+        if (transitionCoordinator) { duration = transitionCoordinator.transitionDuration; }
+        
         if (animated) {
-            [UIView animateWithDuration:0.35f animations:animationBlock];
+            [UIView animateWithDuration:duration animations:animationBlock];
         }
         else {
             animationBlock();
@@ -113,9 +124,8 @@
         return;
     }
     
-    // If we ARE a child of a navigation controller, coordinate these animations with it
-    id<UIViewControllerTransitionCoordinator> coordinator = self.navigationController.transitionCoordinator;
-    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+    // If we are in an interactive animation (eg, swipe-to-go-back in UINavigationController), attach the animations
+    [transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         animationBlock();
     } completion:nil];
 }
@@ -126,16 +136,6 @@
 {
     [super setBarStyle:barStyle];
     [self updateContentViewsForBarStyle];
-}
-
-- (void)setDelegate:(id<UINavigationBarDelegate>)delegate
-{
-    [super setDelegate:delegate];
-    
-    // If the delegate was a navigation controller, capture it
-    if ([delegate isKindOfClass:[UINavigationController class]]) {
-        self.navigationController = (UINavigationController *)delegate;
-    }
 }
 
 @end

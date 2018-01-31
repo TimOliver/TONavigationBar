@@ -21,7 +21,6 @@
     
     ViewController *viewController = [[ViewController alloc] init];
     UINavigationController *navController = [[UINavigationController alloc] initWithNavigationBarClass:[TONavigationBar class] toolbarClass:nil];
-    navController.navigationBar.barStyle = UIBarStyleBlack;
     [navController pushViewController:viewController animated:NO];
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];

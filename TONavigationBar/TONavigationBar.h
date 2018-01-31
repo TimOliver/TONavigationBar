@@ -11,5 +11,6 @@
 @interface TONavigationBar : UINavigationBar
 
 - (void)setBackgroundHidden:(BOOL)hidden animated:(BOOL)animated;
+- (void)setBackgroundHidden:(BOOL)hidden animated:(BOOL)animated transitionCoordinator:(id<UIViewControllerTransitionCoordinator>)transitionCoordinator;
 
 @end

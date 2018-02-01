@@ -106,10 +106,11 @@
         self.backgroundView.alpha = hidden ? 0.0f : 1.0f;
         self.separatorView.alpha = hidden ? 0.0f : 1.0f;
         self.tintColor = hidden ? [UIColor whiteColor] : nil;
+        self.barStyle = hidden ? UIBarStyleBlack : UIBarStyleDefault; 
     };
     
     // If no transition coordinator was supplied, defer back to a pre-canned animation.
-    // For some annoying reason, the initial transition coordinator in iOS 11 fails to play the animation properly.
+    // For some annoying reason, the initial transition coordinator in iOS 11 fails to play the animation properly. (Possibly a UIKit bug)
     // As a result, if there is a coordinator, but the animation is NOT interactive, default back to the pre-canned animation
     if (transitionCoordinator == nil || (transitionCoordinator && !transitionCoordinator.initiallyInteractive)) {
         CGFloat duration = 0.35f;
@@ -124,7 +125,7 @@
         return;
     }
     
-    // If we are in an interactive animation (eg, swipe-to-go-back in UINavigationController), attach the animations
+    // If we are in an interactive animation (eg, swipe-to-go-back in UINavigationController), attach the animations to the coordinator
     [transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         animationBlock();
     } completion:nil];

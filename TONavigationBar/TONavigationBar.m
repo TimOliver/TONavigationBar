@@ -7,6 +7,7 @@
 //
 
 #import "TONavigationBar.h"
+#import "UINavigationItem+TONavigationBar.h"
 
 @interface TONavigationBar () <UINavigationControllerDelegate>
 
@@ -23,7 +24,7 @@
 @property (nonatomic, assign) CGFloat separatorHeight;
 
 // Fetch a reference to the title label so we can control it
-//@property (nonatomic, strong) UIView *titleView;
+@property (nonatomic, readonly) UILabel *titleTextLabel;
 
 @end
 
@@ -125,14 +126,19 @@
         self.backgroundView.alpha = _hidden ? 0.0f : 1.0f;
         self.separatorView.alpha = _hidden ? 0.0f : 1.0f;
         self.tintColor = _hidden ? [UIColor whiteColor] : nil;
-        self.barStyle = _hidden ? UIBarStyleBlack : self.preferredBarStyle;
+        self.barStyle = hidden ? UIBarStyleBlack : self.preferredBarStyle;
+        
+        UIColor *textColor = (self.preferredBarStyle > UIBarStyleDefault) ? [UIColor whiteColor] : [UIColor blackColor];
+        self.titleTextLabel.textColor = textColor;
+        self.titleTextAttributes = @{NSForegroundColorAttributeName : textColor};
+        self.largeTitleTextAttributes = @{NSForegroundColorAttributeName : textColor};
     };
     
     _backgroundHidden = hidden;
     
-    // Configure a custom title view that we can explicitly control
-    [self configureNavigationItem:viewController.navigationItem];
-    
+    viewController.navigationItem.to_titleHidden = YES;
+    viewController.navigationItem.to_placeholderTitleView.frame = self.titleTextLabel.bounds;
+
     // If no transition coordinator was supplied, defer back to a pre-canned animation.
     // For some annoying reason, the initial transition coordinator in iOS 11 fails to play the animation properly. (Possibly a UIKit bug)
     // As a result, if there is a coordinator, but the animation is NOT interactive, default back to the pre-canned animation
@@ -163,20 +169,20 @@
     }];
 }
 
-- (void)configureNavigationItem:(UINavigationItem *)navigationItem
+#pragma mark - Internal View Traversal -
+- (UILabel *)titleTextLabel
 {
-    // Either we've configured one already, or the view controller already has its own
-    if (navigationItem.titleView) { return; }
+    for (UIView *subview in self.subviews) {
+        if ([NSStringFromClass([subview class]) rangeOfString:@"Content"].location != NSNotFound) {
+            for (UIView *subSubview in subview.subviews) {
+                if ([subSubview isKindOfClass:[UILabel class]]) {
+                    return (UILabel *)subSubview;
+                }
+            }
+        }
+    }
     
-    // Create a custom title view that we can control
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    titleLabel.font = [UIFont boldSystemFontOfSize:17.0f];
-    titleLabel.textColor = self.barStyle != UIBarStyleDefault ? [UIColor whiteColor] : [UIColor blackColor];
-    titleLabel.textAlignment = NSTextAlignmentCenter;
-    titleLabel.text = "TOOMyGodAReallyLongViewControllerName";
-    [titleLabel sizeToFit];
-    
-    navigationItem.titleView = titleLabel;
+    return nil;
 }
 
 #pragma mark - Accessors -
@@ -185,6 +191,11 @@
 {
     [super setBarStyle:barStyle];
     [self updateContentViewsForBarStyle];
+}
+
+- (UIBarStyle)barStyle
+{
+    return [super barStyle];
 }
 
 @end

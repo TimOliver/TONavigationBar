@@ -10,7 +10,11 @@
 
 @interface TONavigationBar : UINavigationBar
 
+@property (nonatomic, assign) BOOL backgroundHidden;
+
+@property (nonatomic, assign) UIBarStyle preferredBarStyle;
+
 - (void)setBackgroundHidden:(BOOL)hidden animated:(BOOL)animated;
-- (void)setBackgroundHidden:(BOOL)hidden animated:(BOOL)animated transitionCoordinator:(id<UIViewControllerTransitionCoordinator>)transitionCoordinator;
+- (void)setBackgroundHidden:(BOOL)hidden animated:(BOOL)animated forViewController:(UIViewController *)viewController;
 
 @end

@@ -22,6 +22,9 @@
 // The height of the separator, calculated once for efficiency
 @property (nonatomic, assign) CGFloat separatorHeight;
 
+// Fetch a reference to the title label so we can control it
+//@property (nonatomic, strong) UIView *titleView;
+
 @end
 
 @implementation TONavigationBar
@@ -90,45 +93,90 @@
         visualEffectSubview.backgroundColor = [UIColor colorWithWhite:0.97f alpha:0.8f];
     }
     
-    CGFloat greyColor = darkMode ? 0.8f : 0.3f;
+    // Configure the separator color
+    CGFloat greyColor = darkMode ? 0.8f : 0.4f;
     self.separatorView.backgroundColor = [UIColor colorWithWhite:greyColor alpha:1.0f];
+    
+    // If we've got a custom title view, configure the text color
+    if (self.topItem.titleView && [self.topItem.titleView isKindOfClass:[UILabel class]]) {
+        UILabel *titleLabel = (UILabel *)self.topItem.titleView;
+        titleLabel.textColor = (!darkMode ? [UIColor blackColor] : [UIColor whiteColor]);
+    }
 }
 
 #pragma mark - Transition Handling -
-- (void)setBackgroundHidden:(BOOL)hidden animated:(BOOL)animated
+- (void)setBackgroundHidden:(BOOL)backgroundHidden
 {
-    [self setBackgroundHidden:hidden animated:animated transitionCoordinator:nil];
+    [self setBackgroundHidden:backgroundHidden animated:NO forViewController:nil];
 }
 
-- (void)setBackgroundHidden:(BOOL)hidden animated:(BOOL)animated transitionCoordinator:(id<UIViewControllerTransitionCoordinator>)transitionCoordinator
+- (void)setBackgroundHidden:(BOOL)hidden animated:(BOOL)animated
 {
-    void (^animationBlock)(void) = ^{
-        self.backgroundView.alpha = hidden ? 0.0f : 1.0f;
-        self.separatorView.alpha = hidden ? 0.0f : 1.0f;
-        self.tintColor = hidden ? [UIColor whiteColor] : nil;
-        self.barStyle = hidden ? UIBarStyleBlack : UIBarStyleDefault; 
+    [self setBackgroundHidden:hidden animated:animated forViewController:nil];
+}
+
+- (void)setBackgroundHidden:(BOOL)hidden animated:(BOOL)animated forViewController:(UIViewController *)viewController
+{
+    if (hidden == _backgroundHidden) {
+        return;
+    }
+    
+    void (^animationBlock)(BOOL) = ^(BOOL _hidden) {
+        self.backgroundView.alpha = _hidden ? 0.0f : 1.0f;
+        self.separatorView.alpha = _hidden ? 0.0f : 1.0f;
+        self.tintColor = _hidden ? [UIColor whiteColor] : nil;
+        self.barStyle = _hidden ? UIBarStyleBlack : self.preferredBarStyle;
     };
+    
+    _backgroundHidden = hidden;
+    
+    // Configure a custom title view that we can explicitly control
+    [self configureNavigationItem:viewController.navigationItem];
     
     // If no transition coordinator was supplied, defer back to a pre-canned animation.
     // For some annoying reason, the initial transition coordinator in iOS 11 fails to play the animation properly. (Possibly a UIKit bug)
     // As a result, if there is a coordinator, but the animation is NOT interactive, default back to the pre-canned animation
+    id<UIViewControllerTransitionCoordinator> transitionCoordinator = viewController.transitionCoordinator;
     if (transitionCoordinator == nil || (transitionCoordinator && !transitionCoordinator.initiallyInteractive)) {
         CGFloat duration = 0.35f;
         if (transitionCoordinator) { duration = transitionCoordinator.transitionDuration; }
         
         if (animated) {
-            [UIView animateWithDuration:duration animations:animationBlock];
+            [UIView animateWithDuration:duration animations:^{
+                animationBlock(hidden);
+            }];
         }
         else {
-            animationBlock();
+            animationBlock(hidden);
         }
         return;
     }
     
     // If we are in an interactive animation (eg, swipe-to-go-back in UINavigationController), attach the animations to the coordinator
     [transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        animationBlock();
-    } completion:nil];
+        animationBlock(hidden);
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        // If the transition cancelled (eg, the user swiped back, but let go too soon), restore to the previous state
+        if (context.cancelled) {
+            animationBlock(hidden);
+        }
+    }];
+}
+
+- (void)configureNavigationItem:(UINavigationItem *)navigationItem
+{
+    // Either we've configured one already, or the view controller already has its own
+    if (navigationItem.titleView) { return; }
+    
+    // Create a custom title view that we can control
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    titleLabel.font = [UIFont boldSystemFontOfSize:17.0f];
+    titleLabel.textColor = self.barStyle != UIBarStyleDefault ? [UIColor whiteColor] : [UIColor blackColor];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    titleLabel.text = "TOOMyGodAReallyLongViewControllerName";
+    [titleLabel sizeToFit];
+    
+    navigationItem.titleView = titleLabel;
 }
 
 #pragma mark - Accessors -

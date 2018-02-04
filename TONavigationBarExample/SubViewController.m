@@ -35,7 +35,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [(TONavigationBar *)self.navigationController.navigationBar setBackgroundHidden:YES animated:animated transitionCoordinator:self.transitionCoordinator];
+    [(TONavigationBar *)self.navigationController.navigationBar setBackgroundHidden:YES animated:animated forViewController:self];
 }
 
 @end

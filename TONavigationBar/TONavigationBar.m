@@ -137,8 +137,7 @@
     _backgroundHidden = hidden;
     
     viewController.navigationItem.to_titleHidden = YES;
-    viewController.navigationItem.to_placeholderTitleView.frame = self.titleTextLabel.bounds;
-
+    
     // If no transition coordinator was supplied, defer back to a pre-canned animation.
     // For some annoying reason, the initial transition coordinator in iOS 11 fails to play the animation properly. (Possibly a UIKit bug)
     // As a result, if there is a coordinator, but the animation is NOT interactive, default back to the pre-canned animation

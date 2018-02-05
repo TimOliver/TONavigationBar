@@ -19,6 +19,6 @@ from appearing in the navigation bar when desired by setting it as `titleView`. 
 
 /* If `titleView` was already set as a custom view before this navigation item used the placeholder
  view, the custom view will be saved here so it can be restored later. */
-@property (nonatomic, strong) UIView *to_orignalTitleView;
+@property (nonatomic, strong) UIView *to_originalTitleView;
 
 @end

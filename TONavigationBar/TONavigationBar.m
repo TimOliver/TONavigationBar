@@ -7,7 +7,6 @@
 //
 
 #import "TONavigationBar.h"
-#import "UINavigationItem+TONavigationBar.h"
 
 #define UIKitLocalizedString(key) [[NSBundle bundleWithIdentifier:@"com.apple.UIKit"] localizedStringForKey:key value:@"" table:nil]
 

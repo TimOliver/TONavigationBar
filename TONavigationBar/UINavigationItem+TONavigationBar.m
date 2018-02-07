@@ -7,7 +7,6 @@
 //
 
 #import "UINavigationItem+TONavigationBar.h"
-#import "TONavigationBarPlaceholderTitleView.h"
 
 #import <objc/runtime.h>
 
@@ -53,16 +52,6 @@ static void *TONavigationBarOriginalTitleViewKeyName;
 - (UIView *)to_originalTitleView
 {
     return objc_getAssociatedObject(self, &TONavigationBarOriginalTitleViewKeyName);
-}
-
-- (TONavigationBarPlaceholderTitleView *)to_placeholderTitleView
-{
-    TONavigationBarPlaceholderTitleView *view = (TONavigationBarPlaceholderTitleView *)objc_getAssociatedObject(self, &TONavigationBarPlaceholderTitleViewKeyName);
-    if (view == nil) {
-        view = [[TONavigationBarPlaceholderTitleView alloc] initWithFrame:CGRectZero];
-        objc_setAssociatedObject(self, &TONavigationBarPlaceholderTitleViewKeyName, view, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return view;
 }
 
 @end

@@ -14,7 +14,6 @@
 		222D3A70202175C10015D098 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 222D3A6F202175C10015D098 /* main.m */; };
 		222D3A79202187FA0015D098 /* TONavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 222D3A78202187FA0015D098 /* TONavigationBar.m */; };
 		222D3A7C20218D540015D098 /* SubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 222D3A7B20218D540015D098 /* SubViewController.m */; };
-		227F6A102026FC9F00B5946F /* UINavigationItem+TONavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 227F6A0F2026FC9F00B5946F /* UINavigationItem+TONavigationBar.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,8 +30,6 @@
 		222D3A78202187FA0015D098 /* TONavigationBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TONavigationBar.m; sourceTree = "<group>"; };
 		222D3A7A20218D540015D098 /* SubViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubViewController.h; sourceTree = "<group>"; };
 		222D3A7B20218D540015D098 /* SubViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubViewController.m; sourceTree = "<group>"; };
-		227F6A0E2026FC9F00B5946F /* UINavigationItem+TONavigationBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UINavigationItem+TONavigationBar.h"; sourceTree = "<group>"; };
-		227F6A0F2026FC9F00B5946F /* UINavigationItem+TONavigationBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UINavigationItem+TONavigationBar.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,8 +82,6 @@
 			children = (
 				222D3A77202187FA0015D098 /* TONavigationBar.h */,
 				222D3A78202187FA0015D098 /* TONavigationBar.m */,
-				227F6A0E2026FC9F00B5946F /* UINavigationItem+TONavigationBar.h */,
-				227F6A0F2026FC9F00B5946F /* UINavigationItem+TONavigationBar.m */,
 			);
 			path = TONavigationBar;
 			sourceTree = "<group>";
@@ -166,7 +161,6 @@
 				222D3A65202175C10015D098 /* ViewController.m in Sources */,
 				222D3A70202175C10015D098 /* main.m in Sources */,
 				222D3A62202175C10015D098 /* AppDelegate.m in Sources */,
-				227F6A102026FC9F00B5946F /* UINavigationItem+TONavigationBar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

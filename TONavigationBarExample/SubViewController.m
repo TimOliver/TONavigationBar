@@ -21,7 +21,7 @@
     self.title = @"SubViewController";
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 180)];
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 200)];
     headerView.backgroundColor = [UIColor grayColor];
     self.tableView.tableHeaderView = headerView;
     
@@ -36,7 +36,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [(TONavigationBar *)self.navigationController.navigationBar setBackgroundHidden:YES animated:animated forViewController:self];
+    [self.navigationController.to_navigationBar setBackgroundHidden:YES animated:animated forViewController:self];
+    [self.navigationController.to_navigationBar setTargetScrollView:self.tableView minimumOffset:@(-200) maximumOffset:nil];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

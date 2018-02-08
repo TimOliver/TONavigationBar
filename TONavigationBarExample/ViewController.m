@@ -57,7 +57,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [(TONavigationBar *)self.navigationController.navigationBar setBackgroundHidden:NO animated:animated forViewController:self];
+    [self.navigationController.to_navigationBar setBackgroundHidden:NO animated:animated forViewController:self];
 }
 
 @end

@@ -10,7 +10,7 @@
 
 #define UIKitLocalizedString(key) [[NSBundle bundleWithIdentifier:@"com.apple.UIKit"] localizedStringForKey:key value:@"" table:nil]
 
-@interface TONavigationBar () <UINavigationControllerDelegate>
+@interface TONavigationBar ()
 
 // The `UINavigationController` object that is governing this navigation bar
 @property (nonatomic, weak) UINavigationController *navigationController;
@@ -29,6 +29,9 @@
 
 // An internal reference to the content view that holds all of visible subviews of the navigation bar
 @property (nonatomic, weak) UIView *contentView;
+
+// A property animator to manually control the tint color of the buttons in the navigation bar
+@property (nonatomic, strong) UIViewPropertyAnimator *tintAnimator;
 
 @end
 
@@ -86,16 +89,21 @@
     frame.size.height = _separatorHeight;
     self.separatorView.frame = frame;
     
-    //
+    // This will be called at the start of each navigation item
+    // transition, by which point we will know if it needs to be surpressed
+    // for the next animation.
     if (self.backgroundHidden) {
         self.titleTextLabel.hidden = YES;
+        
+        // Update the visiblity of the content depending on scroll progress
+        [self updateBackgroundVisibilityForScrollView];
     }
 }
 
 - (void)updateContentViewsForBarStyle
 {
     // Work out if we're light mode or dark
-    BOOL darkMode = (self.barStyle != UIBarStyleDefault);
+    BOOL darkMode = (self.preferredBarStyle != UIBarStyleDefault);
     
     // Change the visual effect style to match
     self.backgroundView.effect = [UIBlurEffect effectWithStyle:darkMode ? UIBlurEffectStyleDark : UIBlurEffectStyleLight];
@@ -107,11 +115,70 @@
     }
     
     // Configure the separator color
-    CGFloat greyColor = darkMode ? 0.8f : 0.4f;
+    CGFloat greyColor = darkMode ? 0.4f : 0.75f;
     self.separatorView.backgroundColor = [UIColor colorWithWhite:greyColor alpha:1.0f];
 }
 
+- (void)updateBackgroundVisibilityForScrollView
+{
+    if (self.targetScrollView == nil) {
+        return;
+    }
+    
+    CGFloat minimumOffset = -self.targetScrollView.contentInset.top;
+    if (self.scrollViewMinimumOffset) { minimumOffset = self.scrollViewMinimumOffset.floatValue; }
+    
+    CGFloat maximumOffset = -CGRectGetMaxY(self.frame);
+    if (self.scrollViewMaximumOffset) { maximumOffset = self.scrollViewMaximumOffset.floatValue; }
+    
+    CGFloat range = MAX(maximumOffset - minimumOffset, 0.0f);
+    if ((NSInteger)range == 0) { return; } // Don't bother if no tangible range
+    
+    // Get the current scroll position
+    CGFloat offset = self.targetScrollView.contentOffset.y;
+    
+    // Work out which portion of the scroll range the view is currently in, then clamp
+    CGFloat progression = fabs(offset / range);
+    progression = MIN(progression, 1.0f);
+    progression = MAX(progression, 0.0f);
+    
+    self.backgroundView.alpha = progression;
+    self.separatorView.alpha = progression;
+    
+    if (progression > 0.0f) {
+        self.titleTextLabel.hidden = NO;
+    }
+    self.titleTextLabel.alpha = progression;
+}
+
+- (void)configureTintAnimator
+{
+    // If the navigation bar is visible, this is unneeded
+    if (self.backgroundHidden == NO) {
+        self.tintAnimator = nil;
+        return;
+    }
+    
+    // Disregard if one is already present
+    if (self.backgroundHidden && self.tintAnimator) {
+        return;
+    }
+    
+    // Set initial property value
+    self.tintColor = [UIColor whiteColor];
+    self.tintAnimator = [[UIViewPropertyAnimator alloc] initWithDuration:1.0f curve:UIViewAnimationCurveLinear animations:^{
+        self.tintColor = self.preferredTintColor;
+    }];
+}
+
+#pragma mark - KVO Handling -
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    [self updateBackgroundVisibilityForScrollView];
+}
+
 #pragma mark - Transition Handling -
+
 - (void)setBackgroundHidden:(BOOL)backgroundHidden
 {
     [self setBackgroundHidden:backgroundHidden animated:NO forViewController:nil];
@@ -153,8 +220,13 @@
     // Set the new value
     _backgroundHidden = hidden;
     
+    // Release the observed scroll view since toggling to non-hidden implies a change in scroll view
+    if (!hidden) {
+        self.targetScrollView = nil;
+    }
+    
     // If no transition coordinator was supplied, defer back to a pre-canned animation.
-    // For some annoying reason, the initial transition coordinator in iOS 11 fails to play the animation properly. (Possibly a UIKit bug)
+    // Also, for some annoying reason, the initial coordinator transition animation in iOS 11 fails to play the animation properly. (Possibly a UIKit bug)
     // As a result, if there is a coordinator, but the animation is NOT interactive, default back to the pre-canned animation
     id<UIViewControllerTransitionCoordinator> transitionCoordinator = viewController.transitionCoordinator;
     if (transitionCoordinator == nil || (transitionCoordinator && !transitionCoordinator.initiallyInteractive)) {
@@ -182,8 +254,6 @@
     [transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         animationBlock(hidden);
     } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        [viewController setNeedsStatusBarAppearanceUpdate];
-        
         // If the transition cancelled (eg, the user swiped back, but let go too soon), restore to the previous state
         if (context.cancelled) {
             animationBlock(hidden);
@@ -208,7 +278,7 @@
 {
     // This is somewhat fragile as it relies on the internal ordering of the UINavigationBar subviews
     // to catch the right one (unless Apple is performing manual layer ordering. In which case we're fine!)
-    // The title label is always the first `UILabel` in the `UINavigationBar` stack, once an animation has started.
+    // The title label we want is always the first `UILabel` in the `UINavigationBar` stack, once an animation has started.
     for (UIView *subSubview in self.contentView.subviews) {
         if ([subSubview isKindOfClass:[UILabel class]]) {
             return (UILabel *)subSubview;
@@ -223,6 +293,45 @@
     if (_preferredBarStyle == preferredBarStyle) { return; }
     _preferredBarStyle = preferredBarStyle;
     [self updateContentViewsForBarStyle];
+}
+
+- (void)setTargetScrollView:(UIScrollView *)scrollView
+              minimumOffset:(NSNumber *)minimumContentOffset
+              maximumOffset:(NSNumber *)maximumContentOffset
+{
+    self.targetScrollView = scrollView;
+    self.scrollViewMinimumOffset = minimumContentOffset;
+    self.scrollViewMaximumOffset = maximumContentOffset;
+}
+
+- (void)setTargetScrollView:(UIScrollView *)targetScrollView
+{
+    if (_targetScrollView == targetScrollView) { return; }
+    
+    // Remove observer from previous scroll view
+    [_targetScrollView removeObserver:self forKeyPath:@"contentOffset"];
+    
+    _targetScrollView = targetScrollView;
+    
+    // Assign new scroll view to be observed
+    if (_targetScrollView != nil) {
+        [_targetScrollView addObserver:self forKeyPath:@"contentOffset" options:0 context:nil];
+    }
+}
+
+@end
+
+#pragma mark - UINavigationController Integration -
+
+@implementation UINavigationController (TONavigationBar)
+
+- (TONavigationBar *)to_navigationBar
+{
+    if ([self.navigationBar isKindOfClass:[TONavigationBar class]]) {
+        return (TONavigationBar *)self.navigationBar;
+    }
+    
+    return nil;
 }
 
 @end

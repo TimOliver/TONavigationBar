@@ -9,8 +9,11 @@
 #import "SubViewController.h"
 #import "ViewController.h"
 #import "TONavigationBar.h"
+#import "TOHeaderImageView.h"
 
 @interface SubViewController ()
+
+@property (nonatomic, strong) TOHeaderImageView *headerView;
 
 @end
 
@@ -21,16 +24,11 @@
     self.title = @"SubViewController";
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 200)];
-    headerView.backgroundColor = [UIColor grayColor];
-    self.tableView.tableHeaderView = headerView;
+    self.headerView = [[TOHeaderImageView alloc] initWithImage:[UIImage imageNamed:@"Perth.jpg"] height:200.0f];
+    self.headerView.shadowHidden = NO;
+    self.tableView.tableHeaderView = self.headerView;
     
     self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -38,6 +36,11 @@
     [super viewWillAppear:animated];
     [self.navigationController.to_navigationBar setBackgroundHidden:YES animated:animated forViewController:self];
     [self.navigationController.to_navigationBar setTargetScrollView:self.tableView minimumOffset:200.0f];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    self.headerView.scrollOffset = scrollView.contentOffset.y;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -54,7 +57,7 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-    cell.textLabel.text = @"Tap here for more!";
+    cell.textLabel.text = @"Tap here for normal bar";
     
     return cell;
 }

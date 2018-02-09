@@ -1,0 +1,163 @@
+//
+//  TOHeaderImageView.m
+//  TONavigationBarExample
+//
+//  Created by Tim Oliver on 2/10/18.
+//  Copyright © 2018 Tim Oliver. All rights reserved.
+//
+
+#import "TOHeaderImageView.h"
+
+@interface TOHeaderImageView ()
+
+@property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) UIImageView *gradientView;
+
+@property (nonatomic, assign) BOOL shadowIsDirty;
+
+@end
+
+@implementation TOHeaderImageView
+
+- (instancetype)initWithImage:(UIImage *)image height:(CGFloat)height
+{
+    CGRect frame = (CGRect){0.0f, 0.0f, 320.0f, height};
+    if (self = [super initWithFrame:frame]) {
+        _image = image;
+        _shadowHeight = 100.0f;
+        _shadowHidden = YES;
+        _shadowAlpha = 0.4f;
+        _shadowIsDirty = YES;
+        [self setUpViews];
+    }
+    
+    return self;
+}
+
+- (void)setUpViews
+{
+    self.imageView = [[UIImageView alloc] initWithImage:_image];
+    self.imageView.contentMode = UIViewContentModeScaleAspectFill;
+    self.imageView.clipsToBounds = YES;
+    [self addSubview:self.imageView];
+    
+    self.gradientView = [[UIImageView alloc] initWithImage:nil];
+    self.gradientView.layer.magnificationFilter = kCAFilterNearest;
+    self.gradientView.hidden = YES;
+    [self.imageView addSubview:self.gradientView];
+}
+
+- (void)didMoveToSuperview
+{
+    [super didMoveToSuperview];
+    if (self.shadowHeight < 0.0f + FLT_EPSILON) {
+        self.shadowHeight = 110.0f;
+    }
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    CGRect frame = self.imageView.frame;
+    frame.size = self.bounds.size;
+    frame.origin = CGPointZero;
+    
+    // Lay out the image view, scaling up as the scroll view goes down
+    if (self.scrollOffset < 0.0f) {
+        CGFloat offset = fabs(self.scrollOffset);
+        frame.origin.y = -offset;
+        frame.size.height += offset;
+    }
+    self.imageView.frame = frame;
+    
+    // Skip the rest if the shadow is not being used
+    if (self.shadowHidden) {
+        return;
+    }
+    
+    // If needed, generate a new shadow image
+    if (self.shadowIsDirty) {
+        self.gradientView.image = [TOHeaderImageView shadowImageForHeight:_shadowHeight alpha:_shadowAlpha];
+        self.shadowIsDirty = NO;
+    }
+    
+    // Lay out the shadow view
+    frame = self.gradientView.frame;
+    frame.size.height = self.shadowHeight;
+    frame.size.width = self.bounds.size.width;
+    frame.origin.y = (self.scrollOffset < 0.0f) ? 0.0f : fabs(self.scrollOffset);
+    frame.origin.x = 0.0f;
+    self.gradientView.frame = frame;
+}
+
+- (void)setShadowHeight:(CGFloat)shadowHeight
+{
+    if (shadowHeight == _shadowHeight) { return; }
+    _shadowHeight = shadowHeight;
+    self.shadowIsDirty = YES;
+}
+
+- (void)setShadowAlpha:(CGFloat)shadowAlpha
+{
+    if (_shadowAlpha == shadowAlpha) { return; }
+    _shadowAlpha = shadowAlpha;
+    self.shadowIsDirty = YES;
+}
+
+- (void)setScrollOffset:(CGFloat)scrollOffset
+{
+    if (_scrollOffset == scrollOffset) { return; }
+    _scrollOffset = scrollOffset;
+    [self setNeedsLayout];
+}
+
+- (void)setShadowHidden:(BOOL)shadowHidden
+{
+    if (_shadowHidden == shadowHidden) { return; }
+    _shadowHidden = shadowHidden;
+    self.gradientView.hidden = shadowHidden;
+    [self setNeedsLayout];
+}
+
++ (UIImage *)shadowImageForHeight:(CGFloat)height alpha:(CGFloat)alpha
+{
+    UIImage *shadowImage = nil;
+    CGRect frame = (CGRect){0.0f, 0.0f, 1.0f, height};
+    
+    UIGraphicsBeginImageContextWithOptions(frame.size, NO, 0.0f);
+    {
+        //// General Declarations
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        
+        //// Color Declarations
+        UIColor* bottomColor = [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0];
+        UIColor* topColor = [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: alpha];
+        
+        //// Gradient Declarations
+        CGFloat gradientLocations[] = {0, 1};
+        CGGradientRef gradient = CGGradientCreateWithColors(NULL, (__bridge CFArrayRef)@[(id)topColor.CGColor, (id)bottomColor.CGColor], gradientLocations);
+        
+        //// Rectangle Drawing
+        CGRect rectangleRect = CGRectMake(CGRectGetMinX(frame), CGRectGetMinY(frame), frame.size.width, frame.size.height);
+        UIBezierPath* rectanglePath = [UIBezierPath bezierPathWithRect: rectangleRect];
+        CGContextSaveGState(context);
+        [rectanglePath addClip];
+        CGContextDrawLinearGradient(context, gradient,
+                                    CGPointMake(CGRectGetMidX(rectangleRect), CGRectGetMinY(rectangleRect)),
+                                    CGPointMake(CGRectGetMidX(rectangleRect), CGRectGetMaxY(rectangleRect)),
+                                    kNilOptions);
+        CGContextRestoreGState(context);
+        
+        
+        //// Cleanup
+        CGGradientRelease(gradient);
+        
+        shadowImage = UIGraphicsGetImageFromCurrentImageContext();
+    }
+    UIGraphicsEndImageContext();
+    
+    return shadowImage;
+}
+
+@end

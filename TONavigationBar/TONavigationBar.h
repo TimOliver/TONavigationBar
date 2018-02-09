@@ -24,7 +24,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-
 /** A `UINavigationBar` subclass that allows the bar to transition to a clear state with just the bar buttons visible. */
 @interface TONavigationBar : UINavigationBar
 

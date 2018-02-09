@@ -10,9 +10,6 @@
 
 @interface TONavigationBar ()
 
-// The `UINavigationController` object that is governing this navigation bar
-@property (nonatomic, weak) UINavigationController *navigationController;
-
 // A visual effect view that serves as the background for this navigation bar
 @property (nonatomic, strong) UIVisualEffectView *backgroundView;
 
@@ -127,24 +124,28 @@
     offsetHeight = MAX(offsetHeight, 0.0f);
     offsetHeight = MIN(offsetHeight, totalHeight);
 
+    BOOL barShouldBeVisible = offsetHeight > 0.0f + FLT_EPSILON;
+    
     // Layout the background view to slide into view
-    if (offsetHeight > 0.0f + FLT_EPSILON) {
-        CGRect frame = self.backgroundView.frame;
+    CGRect frame = self.backgroundView.frame;
+    if (barShouldBeVisible) {
         frame.origin.y = barHeight - offsetHeight;
         frame.size.height = offsetHeight;
-        self.backgroundView.frame = frame;
         self.backgroundView.alpha = 1.0f;
-        
-        self.separatorView.alpha = offsetHeight / (barHeight * 0.5f);
-        
-        self.titleTextLabel.hidden = NO;
-        self.titleTextLabel.alpha = MAX(offsetHeight - (barHeight * 0.75f), 0.0f) / (barHeight * 0.25f);
     }
-    else {
+    else { // If it's hidden, reset it back in preparation of transitions
+        frame.origin.y = -(CGRectGetMinY(self.frame));
+        frame.size.height = CGRectGetMaxY(self.frame);
         self.backgroundView.alpha = 0.0f;
-        self.separatorView.alpha = 0.0f;
-        self.titleTextLabel.hidden = YES;
     }
+    self.backgroundView.frame = frame;
+    
+    // Change alpha of the separator
+    self.separatorView.alpha = MAX(0.0f, offsetHeight / (barHeight * 0.5f));
+    
+    // Change the alpha of the title label
+    self.titleTextLabel.hidden = !barShouldBeVisible;
+    self.titleTextLabel.alpha = MAX(offsetHeight - (barHeight * 0.75f), 0.0f) / (barHeight * 0.25f);
     
     // Change the tint color once it has passed the middle of the bar
     self.tintColor = (offsetHeight > barHeight * 0.5f) ? self.preferredTintColor : [UIColor whiteColor];

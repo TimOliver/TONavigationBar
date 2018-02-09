@@ -25,11 +25,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 
-/**
- 
- */
+/** A `UINavigationBar` subclass that allows the bar to transition to a clear state with just the bar buttons visible. */
 @interface TONavigationBar : UINavigationBar
-
 
 /** Sets whether the bar background and title label are hidden, and the tint color is white. */
 @property (nonatomic, assign) BOOL backgroundHidden;

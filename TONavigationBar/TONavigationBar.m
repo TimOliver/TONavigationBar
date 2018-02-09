@@ -8,8 +8,6 @@
 
 #import "TONavigationBar.h"
 
-#define UIKitLocalizedString(key) [[NSBundle bundleWithIdentifier:@"com.apple.UIKit"] localizedStringForKey:key value:@"" table:nil]
-
 @interface TONavigationBar ()
 
 // The `UINavigationController` object that is governing this navigation bar
@@ -29,9 +27,6 @@
 
 // An internal reference to the content view that holds all of visible subviews of the navigation bar
 @property (nonatomic, weak) UIView *contentView;
-
-// A property animator to manually control the tint color of the buttons in the navigation bar
-@property (nonatomic, strong) UIViewPropertyAnimator *tintAnimator;
 
 @end
 
@@ -124,51 +119,39 @@
     if (self.targetScrollView == nil) {
         return;
     }
-    
-    CGFloat minimumOffset = -self.targetScrollView.contentInset.top;
-    if (self.scrollViewMinimumOffset) { minimumOffset = self.scrollViewMinimumOffset.floatValue; }
-    
-    CGFloat maximumOffset = -CGRectGetMaxY(self.frame);
-    if (self.scrollViewMaximumOffset) { maximumOffset = self.scrollViewMaximumOffset.floatValue; }
-    
-    CGFloat range = MAX(maximumOffset - minimumOffset, 0.0f);
-    if ((NSInteger)range == 0) { return; } // Don't bother if no tangible range
-    
-    // Get the current scroll position
-    CGFloat offset = self.targetScrollView.contentOffset.y;
-    
-    // Work out which portion of the scroll range the view is currently in, then clamp
-    CGFloat progression = fabs(offset / range);
-    progression = MIN(progression, 1.0f);
-    progression = MAX(progression, 0.0f);
-    
-    self.backgroundView.alpha = progression;
-    self.separatorView.alpha = progression;
-    
-    if (progression > 0.0f) {
-        self.titleTextLabel.hidden = NO;
-    }
-    self.titleTextLabel.alpha = progression;
-}
 
-- (void)configureTintAnimator
-{
-    // If the navigation bar is visible, this is unneeded
-    if (self.backgroundHidden == NO) {
-        self.tintAnimator = nil;
-        return;
+    CGFloat totalHeight = CGRectGetMaxY(self.frame); // Includes status bar
+    CGFloat barHeight = CGRectGetHeight(self.frame);
+
+    CGFloat offsetHeight = (self.targetScrollView.contentOffset.y - self.scrollViewMinimumOffset) + totalHeight;
+    offsetHeight = MAX(offsetHeight, 0.0f);
+    offsetHeight = MIN(offsetHeight, totalHeight);
+
+    // Layout the background view to slide into view
+    if (offsetHeight > 0.0f + FLT_EPSILON) {
+        CGRect frame = self.backgroundView.frame;
+        frame.origin.y = barHeight - offsetHeight;
+        frame.size.height = offsetHeight;
+        self.backgroundView.frame = frame;
+        self.backgroundView.alpha = 1.0f;
+        
+        self.separatorView.alpha = offsetHeight / (barHeight * 0.5f);
+        
+        self.titleTextLabel.hidden = NO;
+        self.titleTextLabel.alpha = MAX(offsetHeight - (barHeight * 0.75f), 0.0f) / (barHeight * 0.25f);
+    }
+    else {
+        self.backgroundView.alpha = 0.0f;
+        self.separatorView.alpha = 0.0f;
+        self.titleTextLabel.hidden = YES;
     }
     
-    // Disregard if one is already present
-    if (self.backgroundHidden && self.tintAnimator) {
-        return;
-    }
+    // Change the tint color once it has passed the middle of the bar
+    self.tintColor = (offsetHeight > barHeight * 0.5f) ? self.preferredTintColor : [UIColor whiteColor];
     
-    // Set initial property value
-    self.tintColor = [UIColor whiteColor];
-    self.tintAnimator = [[UIViewPropertyAnimator alloc] initWithDuration:1.0f curve:UIViewAnimationCurveLinear animations:^{
-        self.tintColor = self.preferredTintColor;
-    }];
+    // Change the status bar colour once the offset has reached its midpoint
+    CGFloat statusBarHeight = totalHeight - barHeight;
+    self.barStyle = (offsetHeight > barHeight + (statusBarHeight * 0.5f)) ? self.preferredBarStyle : UIBarStyleBlack;
 }
 
 #pragma mark - KVO Handling -
@@ -295,13 +278,10 @@
     [self updateContentViewsForBarStyle];
 }
 
-- (void)setTargetScrollView:(UIScrollView *)scrollView
-              minimumOffset:(NSNumber *)minimumContentOffset
-              maximumOffset:(NSNumber *)maximumContentOffset
+- (void)setTargetScrollView:(UIScrollView *)scrollView minimumOffset:(CGFloat)minimumContentOffset
 {
     self.targetScrollView = scrollView;
     self.scrollViewMinimumOffset = minimumContentOffset;
-    self.scrollViewMaximumOffset = maximumContentOffset;
 }
 
 - (void)setTargetScrollView:(UIScrollView *)targetScrollView

@@ -37,7 +37,7 @@
 {
     [super viewWillAppear:animated];
     [self.navigationController.to_navigationBar setBackgroundHidden:YES animated:animated forViewController:self];
-    [self.navigationController.to_navigationBar setTargetScrollView:self.tableView minimumOffset:@(-200) maximumOffset:nil];
+    [self.navigationController.to_navigationBar setTargetScrollView:self.tableView minimumOffset:200.0f];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

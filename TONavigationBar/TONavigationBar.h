@@ -20,8 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) UIScrollView *targetScrollView;
 
-@property (nonatomic, strong, nullable) NSNumber *scrollViewMinimumOffset;
-@property (nonatomic, assign, nullable) NSNumber *scrollViewMaximumOffset;
+@property (nonatomic, assign) CGFloat scrollViewMinimumOffset;
 
 - (void)setBackgroundHidden:(BOOL)hidden animated:(BOOL)animated;
 
@@ -29,9 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
                    animated:(BOOL)animated
           forViewController:(nullable UIViewController *)viewController;
 
-- (void)setTargetScrollView:(nullable UIScrollView *)scrollView
-       minimumOffset:(nullable NSNumber *)minimumContentOffset
-       maximumOffset:(nullable NSNumber *)maximumContentOffset;
+- (void)setTargetScrollView:(nullable UIScrollView *)scrollView minimumOffset:(CGFloat)minimumContentOffset;
 
 @end
 

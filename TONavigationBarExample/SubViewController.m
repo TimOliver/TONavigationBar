@@ -24,9 +24,8 @@
     self.title = @"SubViewController";
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     
-    self.headerView = [[TOHeaderImageView alloc] initWithImage:[UIImage imageNamed:@"OK.jpg"] height:200.0f];
-    self.headerView.shadowHidden = YES;
-    self.headerView.contentMode = UIViewContentModeScaleAspectFit; // Content mode is normally 'fill'
+    self.headerView = [[TOHeaderImageView alloc] initWithImage:[UIImage imageNamed:@"Firewatch.jpg"] height:200.0f];
+    self.headerView.shadowHidden = NO;
     self.tableView.tableHeaderView = self.headerView;
     
     self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;

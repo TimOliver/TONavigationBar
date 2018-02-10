@@ -107,7 +107,25 @@ UINavigationController *navigationController = [[UINavigationController alloc] i
 
 ## Architecture of `TONavigationBar`
 
-// TODO XD
+In order to modify `UINavigationBar` to the same style Apple uses, a few things need to happen:
+
+* The background view, including the separator line need to be removed.
+* The title label in the center needs to be removed.
+* The tint color needs to be set to white (To make the buttons white).
+* The bar style needs to be set to `UIBarStyleBlack` (Which makes `UINavigationController` change the status bar to white.
+
+Changing the tint color and bar style are trivial, however there are no public APIs provided by Apple to easily control the alpha of just the background views, or the title label.
+
+The way `TONavigationBar` solves this is as follows:
+
+* The official background views are removed by using `[UINavigationBar setBackgroundImage:[[UIImage alloc] init]` and then a wholly custom set are put in their place. This also means transitioning it back while scrolling is possible.
+* The title label is controlled by manually traversing `UINavigationBar`'s internal views, finding the right one, and then overriding its presentation by Apple's code.
+
+## Is this App Store safe?
+
+Yes. It should be. The only slightly dubious thing this view does is that it traverses some internal Apple views to find the title label. However no private APIs are called in the process, so that should be no problem.
+
+That being said, internal view traversal is always a terrible way to go, and this library MAY break in future versions of iOS without maintenance. Thankfully, it's set up so if it does break, the absolute worst thing that can happen is that the title label will always be visible.
 
 ## Credits
 `TOCropViewController` was originally created by [Tim Oliver](http://twitter.com/TimOliverAU) as a component for [iComics](http://icomics.co), a comic reader app for iOS.

@@ -99,7 +99,12 @@
     // transition, by which point we will know if it needs to be surpressed
     // for the next animation.
     if (self.backgroundHidden) {
-        self.titleTextLabel.hidden = YES;
+        if (self.topItem.titleView) {
+            self.topItem.titleView.hidden = YES;
+        }
+        else {
+            self.titleTextLabel.hidden = YES;
+        }
         
         // Update the visiblity of the content depending on scroll progress
         [self updateBackgroundVisibilityForScrollView];
@@ -157,9 +162,18 @@
     // Change alpha of the separator
     self.separatorView.alpha = MAX(0.0f, offsetHeight / (barHeight * 0.5f));
     
-    // Change the alpha of the title label
-    self.titleTextLabel.hidden = !barShouldBeVisible;
-    self.titleTextLabel.alpha = MAX(offsetHeight - (barHeight * 0.75f), 0.0f) / (barHeight * 0.25f);
+    // Change the alpha of the title label/view
+    BOOL hidden = !barShouldBeVisible;
+    CGFloat alpha = MAX(offsetHeight - (barHeight * 0.75f), 0.0f) / (barHeight * 0.25f);
+    
+    if (self.topItem.titleView) {
+        self.topItem.titleView.hidden = hidden;
+        self.topItem.titleView.alpha = alpha;
+    }
+    else {
+        self.titleTextLabel.hidden = hidden;
+        self.titleTextLabel.alpha = alpha;
+    }
     
     // Change the tint color once it has passed the middle of the bar
     self.tintColor = (offsetHeight > barHeight * 0.5f) ? self.preferredTintColor : [UIColor whiteColor];

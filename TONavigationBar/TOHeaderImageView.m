@@ -23,10 +23,12 @@
 {
     CGRect frame = (CGRect){0.0f, 0.0f, 320.0f, height};
     if (self = [super initWithFrame:frame]) {
+        self.backgroundColor = [UIColor blackColor];
+        self.contentMode = UIViewContentModeScaleAspectFill;
         _image = image;
         _shadowHeight = 100.0f;
         _shadowHidden = YES;
-        _shadowAlpha = 0.4f;
+        _shadowAlpha = 0.2f;
         _shadowIsDirty = YES;
         [self setUpViews];
     }
@@ -39,6 +41,7 @@
     self.imageView = [[UIImageView alloc] initWithImage:_image];
     self.imageView.contentMode = UIViewContentModeScaleAspectFill;
     self.imageView.clipsToBounds = YES;
+    self.imageView.backgroundColor = [UIColor blackColor];
     [self addSubview:self.imageView];
     
     self.gradientView = [[UIImageView alloc] initWithImage:nil];
@@ -118,6 +121,18 @@
     _shadowHidden = shadowHidden;
     self.gradientView.hidden = shadowHidden;
     [self setNeedsLayout];
+}
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor
+{
+    [super setBackgroundColor:backgroundColor];
+    self.imageView.backgroundColor = backgroundColor;
+}
+
+- (void)setContentMode:(UIViewContentMode)contentMode
+{
+    [super setContentMode:contentMode];
+    self.imageView.contentMode = contentMode;
 }
 
 + (UIImage *)shadowImageForHeight:(CGFloat)height alpha:(CGFloat)alpha

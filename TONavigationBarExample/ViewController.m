@@ -21,6 +21,7 @@
     
     self.title = @"TONavigationBar";
     self.navigationController.navigationBar.prefersLargeTitles = YES;
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:nil action:nil];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

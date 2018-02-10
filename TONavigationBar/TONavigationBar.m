@@ -206,7 +206,9 @@
         // may sometimes fail to switch to the correct colour
         UIColor *textColor = (self.preferredBarStyle > UIBarStyleDefault) ? [UIColor whiteColor] : [UIColor blackColor];
         self.titleTextAttributes = @{NSForegroundColorAttributeName : textColor};
-        self.largeTitleTextAttributes = @{NSForegroundColorAttributeName : textColor};
+        if (@available(iOS 11.0, *)) {
+            self.largeTitleTextAttributes = @{NSForegroundColorAttributeName : textColor};
+        }
     };
 
     // A block for switching the bar style, separate from the animation block since there

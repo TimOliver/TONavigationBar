@@ -24,14 +24,23 @@
 
 @interface TOHeaderImageView ()
 
+/** The image view which displays the background image.
+    This is kept as a private subview so its own height can change independently
+    of the main view. (Necessary if it's a `UITableView` header view). */
 @property (nonatomic, strong) UIImageView *imageView;
+
+/** The view that displays the gradient view above the background image. */
 @property (nonatomic, strong) UIImageView *gradientView;
 
+/** Changing either `shadowAlpha` or `shadowHeight` will set this flag to YES,
+    which will trigger a regeneration of the shadow image on the next layout. */
 @property (nonatomic, assign) BOOL shadowIsDirty;
 
 @end
 
 @implementation TOHeaderImageView
+
+#pragma mark - View Creation -
 
 - (instancetype)initWithImage:(UIImage *)image height:(CGFloat)height
 {
@@ -63,6 +72,8 @@
     self.gradientView.hidden = YES;
     [self.imageView addSubview:self.gradientView];
 }
+
+#pragma mark - View Lifecycle -
 
 - (void)didMoveToSuperview
 {
@@ -108,6 +119,8 @@
     self.gradientView.frame = frame;
 }
 
+#pragma mark - View Layout -
+
 - (void)setShadowHeight:(CGFloat)shadowHeight
 {
     if (shadowHeight == _shadowHeight) { return; }
@@ -148,6 +161,15 @@
     [super setContentMode:contentMode];
     self.imageView.contentMode = contentMode;
 }
+
+- (void)setImage:(UIImage *)image
+{
+    if (image == _image) { return; }
+    _image = image;
+    self.imageView.image = image;
+}
+
+#pragma mark - Image Generation -
 
 + (UIImage *)shadowImageForHeight:(CGFloat)height alpha:(CGFloat)alpha
 {

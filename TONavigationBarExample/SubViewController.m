@@ -21,7 +21,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"SubViewController";
+    self.title = @"Firewatch";
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     
     self.headerView = [[TOHeaderImageView alloc] initWithImage:[UIImage imageNamed:@"Firewatch.jpg"] height:200.0f];

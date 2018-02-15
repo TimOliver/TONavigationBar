@@ -14,7 +14,7 @@
 
 `TONavigationBar` is an open-source subclass of `UINavigationBar` that adds the ability to set the background content of the navigation bar to transparent, and then gradually bring it back in as the user scrolls through the page.
 
-Apple use this effect in their 'modern' style iOS apps (Music, TV, App Store) for any content deemed 'notable'. Unfortunately, while it seems like a trivial thing to be able to do, none of the APIs necessary to reconfigure a `UINavigationBar` to be transparent in that way exist. `TONavigationBar` internally re-implements a variety of the `UINavigationBar` functionality in order to make this possible.
+Apple uses this effect in their 'modern' style iOS apps (Music, TV, App Store) for any content deemed 'notable'. Unfortunately, while it seems like a trivial thing to be able to do, none of the APIs necessary to reconfigure a `UINavigationBar` to be transparent in that way exist. `TONavigationBar` internally re-implements a variety of the `UINavigationBar` functionality in order to make this possible.
 
 ## Features
 * Fully integrates into `UINavigationController`.
@@ -128,7 +128,7 @@ Yes. It should be. The only slightly dubious thing this view does is that it tra
 That being said, internal view traversal is always a terrible way to go, and this library MAY break in future versions of iOS without maintenance. Thankfully, it's set up so if it does break, the absolute worst thing that can happen is that the title label will always be visible.
 
 ## Credits
-`TOCropViewController` was originally created by [Tim Oliver](http://twitter.com/TimOliverAU) as a component for [iComics](http://icomics.co), a comic reader app for iOS.
+`TONavigationBar` was originally created by [Tim Oliver](http://twitter.com/TimOliverAU) as a component for [iComics](http://icomics.co), a comic reader app for iOS.
 
 [Firewatch Wallpaper](http://blog.camposanto.com/post/138965082204/firewatch-launch-wallpaper-when-we-redid-the) by Campo Santo and is used for illustrative purposes. [Firewatch](http://store.steampowered.com/app/383870/Firewatch/) is available on Steam.
 

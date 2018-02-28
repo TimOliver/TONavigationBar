@@ -88,9 +88,9 @@ UINavigationController *navigationController = [[UINavigationController alloc] i
 @implementation MyTableViewController
 
 - (void)viewDidLoad {
-	[super viewDidLoad];
+    [super viewDidLoad];
 	
-	    self.headerView = [[TOHeaderImageView alloc] initWithImage:[UIImage imageNamed:@"MyPicture.jpg"] height:200.0f];
+    self.headerView = [[TOHeaderImageView alloc] initWithImage:[UIImage imageNamed:@"MyPicture.jpg"] height:200.0f];
     self.headerView.shadowHidden = NO;
     self.tableView.tableHeaderView = self.headerView;
 }

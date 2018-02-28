@@ -94,19 +94,22 @@
     frame.origin.y = frame.size.height - _separatorHeight;
     frame.size.height = _separatorHeight;
     self.separatorView.frame = frame;
-    
-    // This will be called at the start of each navigation item
+
+    // As this method will be called at the start of each navigation item
     // transition, by which point we will know if it needs to be surpressed
     // for the next animation.
+
+    // Force set the title visibility based on the current visibility state
+    // If the scroll view requires the title to be unhidden, it will do so below
+    if (self.topItem.titleView) {
+        self.topItem.titleView.hidden = self.backgroundHidden;
+    }
+    else {
+        self.titleTextLabel.hidden = self.backgroundHidden;
+    }
+
+    // Update the visiblity of the content depending on scroll progress
     if (self.backgroundHidden) {
-        if (self.topItem.titleView) {
-            self.topItem.titleView.hidden = YES;
-        }
-        else {
-            self.titleTextLabel.hidden = YES;
-        }
-        
-        // Update the visiblity of the content depending on scroll progress
         [self updateBackgroundVisibilityForScrollView];
     }
 }

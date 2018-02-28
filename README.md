@@ -25,7 +25,7 @@ Apple uses this effect in their 'modern' style iOS apps (Music, TV, App Store) f
 * Library also features `TOHeaderImageView`, a header view that may be used as the banner in scroll views.
 
 ## System Requirements
-iOS 10.0 or above
+iOS 11.0 or above
 
 ## Installation
 

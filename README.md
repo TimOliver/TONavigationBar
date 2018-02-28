@@ -112,7 +112,7 @@ In order to modify `UINavigationBar` to the same style Apple uses, a few things 
 * The background view, including the separator line need to be removed.
 * The title label in the center needs to be removed.
 * The tint color needs to be set to white (To make the buttons white).
-* The bar style needs to be set to `UIBarStyleBlack` (Which makes `UINavigationController` change the status bar to white.
+* The bar style needs to be set to `UIBarStyleBlack` (Which makes `UINavigationController` change the status bar style to white.)
 
 Changing the tint color and bar style are trivial, however there are no public APIs provided by Apple to easily control the alpha of just the background views, or the title label.
 

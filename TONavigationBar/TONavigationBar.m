@@ -73,6 +73,14 @@
     [self updateContentViewsForBarStyle];
 }
 
+- (void)didAddSubview:(UIView *)subview
+{
+    [super didAddSubview:subview];
+    
+    // In case the view wasn't properly set up yet, try capturing the content view again
+    [self captureContentView];
+}
+
 - (void)layoutSubviews
 {
     [super layoutSubviews];

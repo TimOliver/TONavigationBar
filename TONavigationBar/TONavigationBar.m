@@ -45,6 +45,16 @@
 
 #pragma mark - View Creation -
 
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    if (self = [super initWithCoder:coder]) {
+        _backgroundView = [[UIVisualEffectView alloc] initWithEffect:nil];
+        _separatorView = [[UIView alloc] initWithFrame:CGRectZero];
+        _separatorHeight = 1.0f / [UIScreen mainScreen].scale;
+    }
+    return self;
+}
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {

@@ -39,6 +39,9 @@
 // An internal reference to the content view that holds all of visible subviews of the navigation bar
 @property (nonatomic, weak) UIView *contentView;
 
+// State tracking for when this bar has captured the parent navigation controller swipe gesture
+@property (nonatomic, assign) BOOL navigationControllerGestureCaptured;
+
 @end
 
 @implementation TONavigationBar
@@ -194,6 +197,11 @@
     self.barStyle = (offsetHeight > barHeight + (statusBarHeight * 0.5f)) ? self.preferredBarStyle : UIBarStyleBlack;
 }
 
+- (void)interactivePanGestureRecognized:(UIPanGestureRecognizer *)panRecognizer
+{
+    
+}
+
 #pragma mark - KVO Handling -
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
 {
@@ -269,6 +277,16 @@
             animationBlock(hidden);
         }
         return;
+    }
+
+    // If not done so, capture the back gesture so we can manually align animations to it
+    if (!self.navigationControllerGestureCaptured) {
+        UINavigationController *navController = viewController.navigationController;
+        if (navController) {
+            [navController.interactivePopGestureRecognizer addTarget:self action:@selector(interactivePanGestureRecognized:)];
+        }
+
+        self.navigationControllerGestureCaptured = YES;
     }
     
     // Apparently parts of the status bar can fail to change color when captured in an interactive transition. So in thoses

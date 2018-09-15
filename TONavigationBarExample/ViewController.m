@@ -20,9 +20,7 @@
     [super viewDidLoad];
     
     self.title = @"TONavigationBar";
-    if (@available(iOS 11.0, *)) {
-        self.navigationController.navigationBar.prefersLargeTitles = YES;
-    }
+    self.navigationController.navigationBar.prefersLargeTitles = YES;
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:nil action:nil];
 }
 

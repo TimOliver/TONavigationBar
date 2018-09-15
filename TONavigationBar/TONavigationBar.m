@@ -272,7 +272,7 @@ typedef struct {
     void (^animationBlock)(BOOL) = ^(BOOL _hidden) {
         self.backgroundView.alpha = _hidden ? 0.0f : 1.0f;
         self.separatorView.alpha = _hidden ? 0.0f : 1.0f;
-        self.tintColor = _hidden ? [UIColor whiteColor] : nil;
+        self.tintColor = _hidden ? [UIColor whiteColor] : self.preferredTintColor;
 
         // iOS 11 is pretty broken. If this code isn't set, the title labels
         // may sometimes fail to switch to the correct colour

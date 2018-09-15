@@ -22,6 +22,17 @@
 
 #import "TONavigationBar.h"
 
+/**
+ On iOS 12, the tint color animations in `UINavigationBar` have broken and no longer animate.
+ This is especially visible when the user manually swipes back to the previous view controller.
+ To mitigate this, we hook the swipe gesture recognizer and manually change the tint color over time.
+ */
+typedef struct {
+    BOOL captured;            // Whether the gesture recognizer has been captured
+    BOOL hiding;
+    CGPoint anchorPoint;        // When a gesture starts, the original tap point
+} TONavigationBarPopGesture;
+
 @interface TONavigationBar ()
 
 // A visual effect view that serves as the background for this navigation bar
@@ -39,8 +50,8 @@
 // An internal reference to the content view that holds all of visible subviews of the navigation bar
 @property (nonatomic, weak) UIView *contentView;
 
-// State tracking for when this bar has captured the parent navigation controller swipe gesture
-@property (nonatomic, assign) BOOL navigationControllerGestureCaptured;
+// State tracking for dismissing the
+@property (nonatomic, assign) TONavigationBarPopGesture popGesture;
 
 @end
 
@@ -84,6 +95,9 @@
     
     // Update the views to match the current bar style
     [self updateContentViewsForBarStyle];
+    
+    // Capture the tint color so we can revert to it
+    [self captureAppTintColor];
 }
 
 - (void)didAddSubview:(UIView *)subview
@@ -209,7 +223,20 @@
 
 - (void)interactivePanGestureRecognized:(UIPanGestureRecognizer *)panRecognizer
 {
+    if (panRecognizer.state == UIGestureRecognizerStateBegan) {
+        _popGesture.anchorPoint = [panRecognizer locationInView:self];
+    }
     
+    CGFloat x = _popGesture.anchorPoint.x + [panRecognizer translationInView:self].x;
+    if (x < 5.0f) { return; }
+    
+    CGFloat progress = x / self.frame.size.width;
+    UIColor *secondColor = _popGesture.hiding ? [UIColor whiteColor] : self.preferredTintColor;
+    UIColor *firstColor = _popGesture.hiding ? self.preferredTintColor : [UIColor whiteColor];
+    
+    self.tintColor = [TONavigationBar colorBetweenFirstColor:firstColor
+                                                 secondColor:secondColor
+                                                  percentage:progress];
 }
 
 #pragma mark - KVO Handling -
@@ -238,6 +265,8 @@
     if (hidden == _backgroundHidden) {
         return;
     }
+    
+    _popGesture.hiding = hidden;
     
     // An animation block that will handle transitioning all of the views during a 'non-hidden-to-hidden' animation
     void (^animationBlock)(BOOL) = ^(BOOL _hidden) {
@@ -290,13 +319,15 @@
     }
 
     // If not done so, capture the back gesture so we can manually align animations to it
-    if (!self.navigationControllerGestureCaptured) {
-        UINavigationController *navController = viewController.navigationController;
-        if (navController) {
-            [navController.interactivePopGestureRecognizer addTarget:self action:@selector(interactivePanGestureRecognized:)];
-        }
+    if (@available(iOS 12.0, *)) {
+        if (!_popGesture.captured) {
+            UINavigationController *navController = viewController.navigationController;
+            if (navController) {
+                [navController.interactivePopGestureRecognizer addTarget:self action:@selector(interactivePanGestureRecognized:)];
+            }
 
-        self.navigationControllerGestureCaptured = YES;
+            _popGesture.captured = YES;
+        }
     }
     
     // Apparently parts of the status bar can fail to change color when captured in an interactive transition. So in thoses
@@ -325,6 +356,20 @@
     }
     
     return NO;
+}
+
+- (void)captureAppTintColor
+{
+    if (self.preferredTintColor != nil) { return; }
+    
+    // Capture the app tint color
+    UIView *superview = self.superview;
+    do {
+        if (superview.tintColor != nil) {
+            self.preferredTintColor = superview.tintColor;
+            break;
+        }
+    } while ((superview = superview.superview) != nil);
 }
 
 - (UILabel *)titleTextLabel
@@ -367,6 +412,27 @@
     if (_targetScrollView != nil) {
         [_targetScrollView addObserver:self forKeyPath:@"contentOffset" options:0 context:nil];
     }
+}
+
+#pragma mark - Color Calculations -
+
+//https://stackoverflow.com/questions/33519329/how-to-get-mid-color-between-two-uicolors-in-ios
++ (UIColor *)colorBetweenFirstColor:(UIColor *)firstColor secondColor:(UIColor *)secondColor percentage:(CGFloat)progress
+{
+    CGFloat r1, r2, g1, g2, b1, b2, a1, a2;
+    [firstColor getRed:&r1 green:&g1 blue:&b1 alpha:&a1];
+    [secondColor getRed:&r2 green:&g2 blue:&b2 alpha:&a2];
+    
+    CGFloat rDelta, gDelta, bDelta, aDelta;
+    rDelta = r2 - r1;
+    gDelta = g2 - g1;
+    bDelta = b2 - b1;
+    aDelta = a2 - a1;
+    
+    return [UIColor colorWithRed:r1 + (rDelta * progress)
+                           green:g1 + (gDelta * progress)
+                            blue:b1 + (bDelta * progress)
+                           alpha:a1 + (aDelta * progress)];
 }
 
 @end

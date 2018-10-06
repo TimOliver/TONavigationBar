@@ -118,7 +118,8 @@ typedef struct {
     // Ensure the separator is placed above the background view
     [self insertSubview:self.separatorView atIndex:1];
     
-    // Extend the background view from the top of the screen to the bottom
+    // Because `UINavigationController` positions the bar below the
+    // status bar, extend the background view upwards to the top of the screen.
     CGRect frame = self.bounds;
     frame.origin.y = -(CGRectGetMinY(self.frame));
     frame.size.height = CGRectGetMaxY(self.frame);
@@ -130,7 +131,7 @@ typedef struct {
     frame.size.height = _separatorHeight;
     self.separatorView.frame = frame;
 
-    // As this method will be called at the start of each navigation item
+    // This method will be called at the start of each navigation item
     // transition, by which point we will know if it needs to be surpressed
     // for the next animation.
 

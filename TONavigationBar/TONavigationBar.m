@@ -50,7 +50,7 @@
     if (self = [super initWithCoder:coder]) {
         _backgroundView = [[UIVisualEffectView alloc] initWithEffect:nil];
         _separatorView = [[UIView alloc] initWithFrame:CGRectZero];
-        _separatorHeight = 1.0f / [UIScreen mainScreen].scale;
+        _separatorHeight = 1.0f / [UIScreen mainScreen].nativeScale;
     }
     return self;
 }
@@ -60,7 +60,7 @@
     if (self = [super initWithFrame:frame]) {
         _backgroundView = [[UIVisualEffectView alloc] initWithEffect:nil];
         _separatorView = [[UIView alloc] initWithFrame:CGRectZero];
-        _separatorHeight = 1.0f / [UIScreen mainScreen].scale;
+        _separatorHeight = 1.0f / [UIScreen mainScreen].nativeScale;
     }
     
     return self;

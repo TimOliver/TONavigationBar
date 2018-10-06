@@ -22,17 +22,6 @@
 
 #import "TONavigationBar.h"
 
-/**
- On iOS 12, the tint color animations in `UINavigationBar` have broken and no longer animate.
- This is especially visible when the user manually swipes back to the previous view controller.
- To mitigate this, we hook the swipe gesture recognizer and manually change the tint color over time.
- */
-typedef struct {
-    BOOL captured;            // Whether the gesture recognizer has been captured
-    BOOL hiding;
-    CGPoint anchorPoint;        // When a gesture starts, the original tap point
-} TONavigationBarPopGesture;
-
 @interface TONavigationBar ()
 
 // A visual effect view that serves as the background for this navigation bar
@@ -49,9 +38,6 @@ typedef struct {
 
 // An internal reference to the content view that holds all of visible subviews of the navigation bar
 @property (nonatomic, weak) UIView *contentView;
-
-// State tracking for dismissing the
-@property (nonatomic, assign) TONavigationBarPopGesture popGesture;
 
 @end
 
@@ -222,24 +208,6 @@ typedef struct {
     self.barStyle = (offsetHeight > barHeight + (statusBarHeight * 0.5f)) ? self.preferredBarStyle : UIBarStyleBlack;
 }
 
-- (void)interactivePanGestureRecognized:(UIPanGestureRecognizer *)panRecognizer
-{
-    if (panRecognizer.state == UIGestureRecognizerStateBegan) {
-        _popGesture.anchorPoint = [panRecognizer locationInView:self];
-    }
-    
-    CGFloat x = _popGesture.anchorPoint.x + [panRecognizer translationInView:self].x;
-    if (x < 5.0f) { return; }
-    
-    CGFloat progress = x / self.frame.size.width;
-    UIColor *secondColor = _popGesture.hiding ? [UIColor whiteColor] : self.preferredTintColor;
-    UIColor *firstColor = _popGesture.hiding ? self.preferredTintColor : [UIColor whiteColor];
-    
-    self.tintColor = [TONavigationBar colorBetweenFirstColor:firstColor
-                                                 secondColor:secondColor
-                                                  percentage:progress];
-}
-
 #pragma mark - KVO Handling -
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
 {
@@ -266,9 +234,7 @@ typedef struct {
     if (hidden == _backgroundHidden) {
         return;
     }
-    
-    _popGesture.hiding = hidden;
-    
+
     // An animation block that will handle transitioning all of the views during a 'non-hidden-to-hidden' animation
     void (^animationBlock)(BOOL) = ^(BOOL _hidden) {
         self.backgroundView.alpha = _hidden ? 0.0f : 1.0f;
@@ -315,18 +281,6 @@ typedef struct {
             animationBlock(hidden);
         }
         return;
-    }
-
-    // If not done so, capture the back gesture so we can manually align animations to it
-    if (@available(iOS 12.0, *)) {
-        if (!_popGesture.captured) {
-            UINavigationController *navController = viewController.navigationController;
-            if (navController) {
-                [navController.interactivePopGestureRecognizer addTarget:self action:@selector(interactivePanGestureRecognized:)];
-            }
-
-            _popGesture.captured = YES;
-        }
     }
     
     // Apparently parts of the status bar can fail to change color when captured in an interactive transition. So in thoses

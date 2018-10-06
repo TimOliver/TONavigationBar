@@ -367,27 +367,6 @@
     }
 }
 
-#pragma mark - Color Calculations -
-
-//https://stackoverflow.com/questions/33519329/how-to-get-mid-color-between-two-uicolors-in-ios
-+ (UIColor *)colorBetweenFirstColor:(UIColor *)firstColor secondColor:(UIColor *)secondColor percentage:(CGFloat)progress
-{
-    CGFloat r1, r2, g1, g2, b1, b2, a1, a2;
-    [firstColor getRed:&r1 green:&g1 blue:&b1 alpha:&a1];
-    [secondColor getRed:&r2 green:&g2 blue:&b2 alpha:&a2];
-    
-    CGFloat rDelta, gDelta, bDelta, aDelta;
-    rDelta = r2 - r1;
-    gDelta = g2 - g1;
-    bDelta = b2 - b1;
-    aDelta = a2 - a1;
-    
-    return [UIColor colorWithRed:r1 + (rDelta * progress)
-                           green:g1 + (gDelta * progress)
-                            blue:b1 + (bDelta * progress)
-                           alpha:a1 + (aDelta * progress)];
-}
-
 @end
 
 #pragma mark - UINavigationController Integration -

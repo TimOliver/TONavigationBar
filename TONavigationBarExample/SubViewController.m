@@ -41,11 +41,17 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     self.headerView.scrollOffset = scrollView.contentOffset.y;
+
+    // Work out the scroll indicator inset
+    CGFloat inset = self.headerView.frame.size.height;
+    inset -= scrollView.contentOffset.y;
+    inset = MAX(CGRectGetMaxY(self.navigationController.navigationBar.frame), inset);
+    self.tableView.scrollIndicatorInsets = UIEdgeInsetsMake(inset, 0, 0, self.tableView.scrollIndicatorInsets.bottom);
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1;
+    return 100;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -56,9 +62,14 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
-    
-    cell.textLabel.text = @"Tap here for normal bar";
-    
+
+    if (indexPath.row == 0) {
+        cell.textLabel.text = @"Tap here for normal bar";
+    }
+    else {
+        cell.textLabel.text = @"";
+    }
+
     return cell;
 }
 

@@ -50,7 +50,7 @@
     if (self = [super initWithCoder:coder]) {
         _backgroundView = [[UIVisualEffectView alloc] initWithEffect:nil];
         _separatorView = [[UIView alloc] initWithFrame:CGRectZero];
-        _separatorHeight = 1.0f / [UIScreen mainScreen].scale;
+        _separatorHeight = 1.0f / [UIScreen mainScreen].nativeScale;
     }
     return self;
 }
@@ -60,7 +60,7 @@
     if (self = [super initWithFrame:frame]) {
         _backgroundView = [[UIVisualEffectView alloc] initWithEffect:nil];
         _separatorView = [[UIView alloc] initWithFrame:CGRectZero];
-        _separatorHeight = 1.0f / [UIScreen mainScreen].scale;
+        _separatorHeight = 1.0f / [UIScreen mainScreen].nativeScale;
     }
     
     return self;
@@ -104,7 +104,8 @@
     // Ensure the separator is placed above the background view
     [self insertSubview:self.separatorView atIndex:1];
     
-    // Extend the background view from the top of the screen to the bottom
+    // Because `UINavigationController` positions the bar below the
+    // status bar, extend the background view upwards to the top of the screen.
     CGRect frame = self.bounds;
     frame.origin.y = -(CGRectGetMinY(self.frame));
     frame.size.height = CGRectGetMaxY(self.frame);
@@ -116,7 +117,7 @@
     frame.size.height = _separatorHeight;
     self.separatorView.frame = frame;
 
-    // As this method will be called at the start of each navigation item
+    // This method will be called at the start of each navigation item
     // transition, by which point we will know if it needs to be surpressed
     // for the next animation.
 
@@ -364,27 +365,6 @@
     if (_targetScrollView != nil) {
         [_targetScrollView addObserver:self forKeyPath:@"contentOffset" options:0 context:nil];
     }
-}
-
-#pragma mark - Color Calculations -
-
-//https://stackoverflow.com/questions/33519329/how-to-get-mid-color-between-two-uicolors-in-ios
-+ (UIColor *)colorBetweenFirstColor:(UIColor *)firstColor secondColor:(UIColor *)secondColor percentage:(CGFloat)progress
-{
-    CGFloat r1, r2, g1, g2, b1, b2, a1, a2;
-    [firstColor getRed:&r1 green:&g1 blue:&b1 alpha:&a1];
-    [secondColor getRed:&r2 green:&g2 blue:&b2 alpha:&a2];
-    
-    CGFloat rDelta, gDelta, bDelta, aDelta;
-    rDelta = r2 - r1;
-    gDelta = g2 - g1;
-    bDelta = b2 - b1;
-    aDelta = a2 - a1;
-    
-    return [UIColor colorWithRed:r1 + (rDelta * progress)
-                           green:g1 + (gDelta * progress)
-                            blue:b1 + (bDelta * progress)
-                           alpha:a1 + (aDelta * progress)];
 }
 
 @end

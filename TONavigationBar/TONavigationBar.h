@@ -33,12 +33,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** Since this view internally controls `tintColor`, set this property if you wish to override
  the bar's tint color to something different than the system default when the bar is not hidden. */
-@property (nonatomic, strong, nullable) UIColor *preferredTintColor;
+@property (nonatomic, strong, nullable) IBInspectable UIColor *preferredTintColor;
 
 
 /** By default, when the bar is not hidden, the bar style is default. Use this property
  to override the bar style when not hidden. */
-@property (nonatomic, assign) UIBarStyle preferredBarStyle;
+@property (nonatomic, assign) IBInspectable UIBarStyle preferredBarStyle;
 
 
 /** When this scroll view is attached and `scrollViewMinimumOffset` is set, this bar will

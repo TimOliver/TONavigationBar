@@ -375,8 +375,18 @@
 
 - (TONavigationBar *)to_navigationBar
 {
-    if ([self.navigationBar isKindOfClass:[TONavigationBar class]]) {
-        return (TONavigationBar *)self.navigationBar;
+    UINavigationController *navigationController = self;
+    UIViewController *controller = self;
+    do {
+        if ([controller isKindOfClass:UINavigationController.class]) {
+            navigationController = (UINavigationController*)controller;
+        }
+        
+        controller = controller.parentViewController;
+    } while (controller != nil);
+    
+    if ([navigationController.navigationBar isKindOfClass:[TONavigationBar class]]) {
+        return (TONavigationBar *)navigationController.navigationBar;
     }
     
     return nil;

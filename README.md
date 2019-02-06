@@ -4,7 +4,6 @@
 <img src="https://github.com/TimOliver/TONavigationBar/raw/master/screenshot.jpg" width="500" style="margin:0 auto" />
 </p>
 
-[![CocoaPods](https://img.shields.io/cocoapods/dt/TONavigationBar.svg?maxAge=3600)](https://cocoapods.org/pods/TONavigationBar)
 [![Version](https://img.shields.io/cocoapods/v/TONavigationBar.svg?style=flat)](http://cocoadocs.org/docsets/TOCropViewController)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/TimOliver/TONavigationBar/master/LICENSE)
 [![Platform](https://img.shields.io/cocoapods/p/TONavigationBar.svg?style=flat)](http://cocoadocs.org/docsets/TONavigationBar)

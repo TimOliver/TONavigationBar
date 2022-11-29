@@ -15,6 +15,7 @@
 		222D3A79202187FA0015D098 /* TONavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 222D3A78202187FA0015D098 /* TONavigationBar.m */; };
 		222D3A7C20218D540015D098 /* SubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 222D3A7B20218D540015D098 /* SubViewController.m */; };
 		223F5CF9293635F400EEF45E /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 223F5CF8293635F400EEF45E /* README.md */; };
+		223F5CFB29363B0800EEF45E /* TONavigationBar.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 223F5CFA29363B0800EEF45E /* TONavigationBar.podspec */; };
 		2281FE4C202E071300D47FE2 /* TOHeaderImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2281FE4B202E071300D47FE2 /* TOHeaderImageView.m */; };
 		22AAB34A202E984E00B9B39D /* OK.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 22AAB349202E984E00B9B39D /* OK.jpg */; };
 		22AAB34C202EE43200B9B39D /* Firewatch.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 22AAB34B202EE43100B9B39D /* Firewatch.jpg */; };
@@ -35,6 +36,7 @@
 		222D3A7A20218D540015D098 /* SubViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubViewController.h; sourceTree = "<group>"; };
 		222D3A7B20218D540015D098 /* SubViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubViewController.m; sourceTree = "<group>"; };
 		223F5CF8293635F400EEF45E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		223F5CFA29363B0800EEF45E /* TONavigationBar.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TONavigationBar.podspec; sourceTree = "<group>"; };
 		2281FE4A202E071300D47FE2 /* TOHeaderImageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TOHeaderImageView.h; sourceTree = "<group>"; };
 		2281FE4B202E071300D47FE2 /* TOHeaderImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TOHeaderImageView.m; sourceTree = "<group>"; };
 		22AAB349202E984E00B9B39D /* OK.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = OK.jpg; sourceTree = "<group>"; };
@@ -55,9 +57,10 @@
 		222D3A54202175C10015D098 = {
 			isa = PBXGroup;
 			children = (
-				223F5CF8293635F400EEF45E /* README.md */,
 				222D3A76202187D80015D098 /* TONavigationBar */,
 				222D3A5F202175C10015D098 /* TONavigationBarExample */,
+				223F5CFA29363B0800EEF45E /* TONavigationBar.podspec */,
+				223F5CF8293635F400EEF45E /* README.md */,
 				222D3A5E202175C10015D098 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -159,6 +162,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				222D3A6D202175C10015D098 /* LaunchScreen.storyboard in Resources */,
+				223F5CFB29363B0800EEF45E /* TONavigationBar.podspec in Resources */,
 				22AAB34C202EE43200B9B39D /* Firewatch.jpg in Resources */,
 				223F5CF9293635F400EEF45E /* README.md in Resources */,
 				222D3A6A202175C10015D098 /* Assets.xcassets in Resources */,

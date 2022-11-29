@@ -34,7 +34,7 @@
 @property (nonatomic, assign) CGFloat separatorHeight;
 
 // Fetch a reference to the title label so we can control it
-@property (nonatomic, readonly) UILabel *titleTextLabel;
+@property (nonatomic, readonly) UIView *titleContentView;
 
 // An internal reference to the content view that holds all of visible subviews of the navigation bar
 @property (nonatomic, weak) UIView *contentView;
@@ -127,7 +127,7 @@
         self.topItem.titleView.hidden = self.backgroundHidden;
     }
     else {
-        self.titleTextLabel.hidden = self.backgroundHidden;
+        self.titleContentView.hidden = self.backgroundHidden;
     }
 
     // Update the visiblity of the content depending on scroll progress
@@ -196,8 +196,8 @@
         self.topItem.titleView.alpha = alpha;
     }
     else {
-        self.titleTextLabel.hidden = hidden;
-        self.titleTextLabel.alpha = alpha;
+        self.titleContentView.hidden = hidden;
+        self.titleContentView.alpha = alpha;
     }
     
     // Change the tint color once it has passed the middle of the bar
@@ -325,14 +325,22 @@
     } while ((superview = superview.superview) != nil);
 }
 
-- (UILabel *)titleTextLabel
+- (UIView *)titleContentView
 {
     // This is somewhat fragile as it relies on the internal ordering of the UINavigationBar subviews
     // to catch the right one (unless Apple is performing manual layer ordering. In which case we're fine!)
     // The title label we want is always the first `UILabel` in the `UINavigationBar` stack, once an animation has started.
     for (UIView *subSubview in self.contentView.subviews) {
-        if ([subSubview isKindOfClass:[UILabel class]]) {
-            return (UILabel *)subSubview;
+        if (@available(iOS 16.0, *)) {
+            // On iOS 16, the title is in a container view named _UINavigationBarTitleControl
+            if ([NSStringFromClass([subSubview class]) rangeOfString:@"TitleControl"].location != NSNotFound) {
+                return subSubview;
+            }
+        } else {
+            // On iOS 15 and lower, the title is a simple UILabel inside the content view
+            if ([subSubview isKindOfClass:[UILabel class]]) {
+                return (UILabel *)subSubview;
+            }
         }
     }
     

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'TONavigationBar'
-  s.version  = '0.0.1'
+  s.version  = '1.0.0'
   s.license  =  { :type => 'MIT', :file => 'LICENSE' }
   s.summary  = 'A UINavigationBar subclass that recreates the clear bar style of Apple\'s modern apps'
   s.homepage = 'https://github.com/TimOliver/TONavigationBar'

@@ -14,6 +14,8 @@
 		222D3A70202175C10015D098 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 222D3A6F202175C10015D098 /* main.m */; };
 		222D3A79202187FA0015D098 /* TONavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 222D3A78202187FA0015D098 /* TONavigationBar.m */; };
 		222D3A7C20218D540015D098 /* SubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 222D3A7B20218D540015D098 /* SubViewController.m */; };
+		223F5CF9293635F400EEF45E /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 223F5CF8293635F400EEF45E /* README.md */; };
+		223F5CFB29363B0800EEF45E /* TONavigationBar.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 223F5CFA29363B0800EEF45E /* TONavigationBar.podspec */; };
 		2281FE4C202E071300D47FE2 /* TOHeaderImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2281FE4B202E071300D47FE2 /* TOHeaderImageView.m */; };
 		22AAB34A202E984E00B9B39D /* OK.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 22AAB349202E984E00B9B39D /* OK.jpg */; };
 		22AAB34C202EE43200B9B39D /* Firewatch.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 22AAB34B202EE43100B9B39D /* Firewatch.jpg */; };
@@ -33,6 +35,8 @@
 		222D3A78202187FA0015D098 /* TONavigationBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TONavigationBar.m; sourceTree = "<group>"; };
 		222D3A7A20218D540015D098 /* SubViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubViewController.h; sourceTree = "<group>"; };
 		222D3A7B20218D540015D098 /* SubViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubViewController.m; sourceTree = "<group>"; };
+		223F5CF8293635F400EEF45E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		223F5CFA29363B0800EEF45E /* TONavigationBar.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TONavigationBar.podspec; sourceTree = "<group>"; };
 		2281FE4A202E071300D47FE2 /* TOHeaderImageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TOHeaderImageView.h; sourceTree = "<group>"; };
 		2281FE4B202E071300D47FE2 /* TOHeaderImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TOHeaderImageView.m; sourceTree = "<group>"; };
 		22AAB349202E984E00B9B39D /* OK.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = OK.jpg; sourceTree = "<group>"; };
@@ -55,6 +59,8 @@
 			children = (
 				222D3A76202187D80015D098 /* TONavigationBar */,
 				222D3A5F202175C10015D098 /* TONavigationBarExample */,
+				223F5CFA29363B0800EEF45E /* TONavigationBar.podspec */,
+				223F5CF8293635F400EEF45E /* README.md */,
 				222D3A5E202175C10015D098 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -123,7 +129,7 @@
 		222D3A55202175C10015D098 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1000;
+				LastUpgradeCheck = 1410;
 				ORGANIZATIONNAME = "Tim Oliver";
 				TargetAttributes = {
 					222D3A5C202175C10015D098 = {
@@ -156,7 +162,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				222D3A6D202175C10015D098 /* LaunchScreen.storyboard in Resources */,
+				223F5CFB29363B0800EEF45E /* TONavigationBar.podspec in Resources */,
 				22AAB34C202EE43200B9B39D /* Firewatch.jpg in Resources */,
+				223F5CF9293635F400EEF45E /* README.md in Resources */,
 				222D3A6A202175C10015D098 /* Assets.xcassets in Resources */,
 				22AAB34A202E984E00B9B39D /* OK.jpg in Resources */,
 			);
@@ -217,6 +225,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -242,7 +251,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -274,6 +283,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -293,7 +303,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -307,7 +317,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6LF3GMKZAB;
 				INFOPLIST_FILE = TONavigationBarExample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = net.timoliver.TONavigationBarExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -322,7 +332,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6LF3GMKZAB;
 				INFOPLIST_FILE = TONavigationBarExample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = net.timoliver.TONavigationBarExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";

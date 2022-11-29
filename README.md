@@ -1,15 +1,12 @@
 # TONavigationBar
 
 <p align="center">
-<img src="https://github.com/TimOliver/TONavigationBar/raw/master/screenshot.jpg" width="500" style="margin:0 auto" />
+<img src="https://github.com/TimOliver/TONavigationBar/raw/main/screenshot.jpg" width="500" style="margin:0 auto" />
 </p>
 
 [![Version](https://img.shields.io/cocoapods/v/TONavigationBar.svg?style=flat)](http://cocoadocs.org/docsets/TOCropViewController)
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/TimOliver/TONavigationBar/master/LICENSE)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/TimOliver/TONavigationBar/main/LICENSE)
 [![Platform](https://img.shields.io/cocoapods/p/TONavigationBar.svg?style=flat)](http://cocoadocs.org/docsets/TONavigationBar)
-[![Beerpay](https://beerpay.io/TimOliver/TONavigationBar/badge.svg?style=flat)](https://beerpay.io/TimOliver/TONavigationBar)
-[![PayPal](https://img.shields.io/badge/paypal-donate-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M4RKULAVKV7K8)
-
 
 `TONavigationBar` is an open-source subclass of `UINavigationBar` that adds the ability to set the background content of the navigation bar to transparent, and then gradually bring it back in as the user scrolls through the page.
 
